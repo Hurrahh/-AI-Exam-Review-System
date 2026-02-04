@@ -3,12 +3,15 @@ from google.genai import types
 import os
 import streamlit as st
 import json
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
+
+
 
 def get_gemini_client():
-    api_key = os.getenv('GEMINI_API_KEY')
+    # api_key = os.getenv('GEMINI_API_KEY')
+    api_key = st.secrets['GEMINI_API_KEY']
     if not api_key:
         st.error("❌ GEMINI_API_KEY not found in environment variables!")
         st.stop()
@@ -339,4 +342,5 @@ Your response:"""
         )
         return response.text
     except Exception as e:
+
         return f"❌ Error getting response: {str(e)}"

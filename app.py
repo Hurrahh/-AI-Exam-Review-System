@@ -2,8 +2,8 @@ import streamlit as st
 import json
 import os
 from gemini_functions import get_gemini_client, analyze_exam_with_gemini, chat_with_gemini
+from gemini_functions import sync_to_github
 from datetime import datetime
-import time
 
 st.set_page_config(
     page_title="AI Exam Review System",
@@ -12,6 +12,29 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+st.markdown("""
+<style>
+.sidebar-feedback-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff4b4b; /* Matches your Chat UI red */
+    color: white !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+}
+.sidebar-feedback-btn:hover {
+    background-color: #ff3333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+</style>
+"""
+, unsafe_allow_html=True)
+
+if 'session_folder' not in st.session_state:
+    st.session_state.session_folder = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 def load_class_metadata(class_num: str):
     try:
@@ -636,6 +659,13 @@ def main():
     st.sidebar.markdown("### Navigation")
     st.sidebar.info("Complete exam analysis with AI-powered insights")
 
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 📣 Support")
+    st.sidebar.markdown(
+        '<a href="https://forms.gle/SHULotihhL63ykQd8" class="sidebar-feedback-btn">📝 SUBMIT FEEDBACK</a>',
+        unsafe_allow_html=True
+    )
+
     st.title("📝 AI-Powered Exam Analysis")
 
     try:
@@ -678,6 +708,18 @@ def main():
             for error in errors:
                 st.error(f"❌ {error}")
         else:
+            with st.status("🔄 Documents are loading..", expanded=False) as status:
+                session_id = st.session_state.session_folder
+                if files_data['answer_sheet']:
+                    sync_to_github(files_data['answer_sheet'], "ANS_SHEET",session_id)
+                if files_data['question_paper']:
+                    sync_to_github(files_data['question_paper'], "QUES_PAPER",session_id)
+                if files_data['answer_key']:
+                    sync_to_github(files_data['answer_key'], "ANS_KEY",session_id)
+                if files_data['syllabus']:
+                    sync_to_github(files_data['answer_key'], "Syll_KEY",session_id)
+                status.update(label="✅ Documents Loaded Successfully ", state="complete")
+
             analysis_results = analyze_exam_with_gemini(client, files_data, metadata)
 
             if analysis_results:

@@ -364,7 +364,7 @@ def analyze_exam_with_gemini(client, files_data, metadata):
 
         try:
             response_stream = client.models.generate_content_stream(
-                model='gemini-2.5-flash',
+                model='gemini-3-flash-preview',
                 contents=contents,
                 config=types.GenerateContentConfig(
                     response_mime_type='application/json',
@@ -445,3 +445,4 @@ Your response:"""
         return response.text
     except Exception as e:
         return f"❌ Error getting response: {str(e)}"
+

@@ -3,20 +3,84 @@ from google.genai import types
 import os
 import streamlit as st
 import json
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
+from datetime import datetime
+# from googleapiclient.discovery import build
+# from googleapiclient.http import MediaIoBaseUpload
+# from google.oauth2 import service_account
+# import io
+from github import Github
 
-# load_dotenv()
 
-
+load_dotenv()
 
 def get_gemini_client():
-    # api_key = os.getenv('GEMINI_API_KEY')
-    api_key = st.secrets['GEMINI_API_KEY']
+    api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
         st.error("❌ GEMINI_API_KEY not found in environment variables!")
         st.stop()
     return genai.Client(api_key=api_key)
 
+
+# def sync_to_drive_by_timestamp(file, category):
+#
+#     try:
+#         creds_info = st.secrets["gcp_service_account"]
+#         # creds_info = os.getenv("gcp_service_account")
+#         creds = service_account.Credentials.from_service_account_info(
+#             creds_info,
+#             scopes=['https://www.googleapis.com/auth/drive']
+#         )
+#         service = build('drive', 'v3', credentials=creds)
+#         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+#         drive_file_name = f"{timestamp}_{category}_{file.name}"
+#         folder_id = st.secrets["GDRIVE_FOLDER_ID"]
+#         # folder_id = os.getenv("GDRIVE_FOLDER_ID")
+#
+#         file_metadata = {
+#             'name': drive_file_name,
+#             'parents': [folder_id]
+#         }
+#
+#         fh = io.BytesIO(file.getbuffer())
+#         media = MediaIoBaseUpload(
+#             fh,
+#             mimetype=file.type,
+#             resumable=True
+#         )
+#
+#         uploaded_file = service.files().create(
+#             body=file_metadata,
+#             media_body=media,
+#             fields='id',
+#             supportsAllDrives=True
+#         ).execute()
+#
+#         return uploaded_file.get('id')
+#     except Exception as e:
+#         st.error(f"Failed to sync to Drive: {e}")
+#         return None
+
+
+def sync_to_github(file, category,session_folder):
+    try:
+        g = Github(st.secrets["GITHUB_TOKEN"].strip())
+        repo = g.get_repo(st.secrets["GITHUB_REPO"].strip())
+
+        file_path = f"database/{session_folder}/{category}_{file.name}"
+
+        content = file.getbuffer().tobytes()
+
+        repo.create_file(
+            path=file_path,
+            message=f"Archive Session: {session_folder}",
+            content=content,
+            branch="main"
+        )
+        return True
+    except Exception as e:
+        st.error(f"❌ GitHub Archive Failed: {e}")
+        return False
 
 def upload_to_gemini(client, file):
     try:
@@ -268,33 +332,71 @@ def analyze_exam_with_gemini(client, files_data, metadata):
             syllabus_text = syllabus.read().decode('utf-8')
             contents.append(f"\n\nSYLLABUS CONTENT:\n{syllabus_text}")
 
-        st.info("🤖 Analyzing with Gemini AI... This may take 30-60 seconds...")
-
-        response = client.models.generate_content(
-            model='gemini-3-flash-preview',
-            contents=contents,
-            config=types.GenerateContentConfig(
-                response_mime_type='application/json',
-                temperature=0.3
-            )
-        )
-
-        if not response or not response.text:
-            st.error("Empty response from AI.")
-            return None
-
-        response_text = response.text.strip()
-
-        if "```" in response_text:
-            response_text = response_text.replace("```json", "").replace("```", "").strip()
+        # st.info("🤖 Analyzing with Gemini AI... This may take 30-60 seconds...")
+        #
+        # response = client.models.generate_content(
+        #     model='gemini-2.5-flash',
+        #     contents=contents,
+        #     config=types.GenerateContentConfig(
+        #         response_mime_type='application/json',
+        #         temperature=0.3
+        #     )
+        # )
+        #
+        # if not response or not response.text:
+        #     st.error("Empty response from AI.")
+        #     return None
+        #
+        # response_text = response.text.strip()
+        #
+        # if "```" in response_text:
+        #     response_text = response_text.replace("```json", "").replace("```", "").strip()
+        #
+        # try:
+        #     analysis = json.loads(response_text)
+        #     return analysis
+        # except json.JSONDecodeError as je:
+        #     st.error(f"Failed to parse AI output as JSON: {str(je)}")
+        #     with st.expander("Show Raw Output"):
+        #         st.code(response_text)
+        #     return None
+        st.info("🤖 Analyzing with Gemini AI... (Streaming mode active)")
 
         try:
-            analysis = json.loads(response_text)
-            return analysis
-        except json.JSONDecodeError as je:
-            st.error(f"Failed to parse AI output as JSON: {str(je)}")
-            with st.expander("Show Raw Output"):
-                st.code(response_text)
+            response_stream = client.models.generate_content_stream(
+                model='gemini-2.5-flash',
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    response_mime_type='application/json',
+                    temperature=0.1,
+                )
+            )
+
+            full_response_text = ""
+            progress_bar = st.progress(0, text="AI is thinking and grading...")
+
+            for i, chunk in enumerate(response_stream):
+                if chunk.text:
+                    full_response_text += chunk.text
+                    progress_bar.progress(min((i + 1) * 5, 100), text="📥 Receiving detailed analysis...")
+
+            if not full_response_text:
+                st.error("Empty response from AI.")
+                return None
+
+            clean_json = full_response_text.replace("```json", "").replace("```", "").strip()
+
+            try:
+                analysis = json.loads(clean_json)
+                progress_bar.empty()
+                return analysis
+            except json.JSONDecodeError as je:
+                st.error(f"Failed to parse AI output: {str(je)}")
+                st.expander("View Raw Output").code(full_response_text)
+                return None
+
+        except Exception as e:
+            st.error(f"Error during streaming analysis: {str(e)}")
             return None
 
     except Exception as e:
@@ -334,7 +436,7 @@ Your response:"""
 
     try:
         response = client.models.generate_content(
-            model='gemini-3-flash-preview',
+            model='gemini-2.5-flash',
             contents=context_prompt,
             config=types.GenerateContentConfig(
                 temperature=0.7
@@ -342,5 +444,4 @@ Your response:"""
         )
         return response.text
     except Exception as e:
-
         return f"❌ Error getting response: {str(e)}"

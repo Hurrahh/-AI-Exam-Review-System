@@ -1,0 +1,74 @@
+{
+  "class": "5",
+  "default_subject": "Mathematics",
+  "available_subjects": [
+    "Mathematics",
+    "Science",
+    "English",
+    "Social Studies",
+    "Hindi"
+  ],
+  "boards": [
+    "CBSE",
+    "ICSE",
+    "State Board"
+  ],
+  "default_board": "CBSE",
+  "exam_types": [
+    "Unit Test",
+    "Mid Term",
+    "Final",
+    "Weekly Test"
+  ],
+  "default_exam_type": "Unit Test",
+  "checking_strictness": {
+    "options": [
+      "Lenient", "Moderate", "Strict", "Very Strict"
+    ],
+    "default": "Moderate",
+    "description": "Lower strictness for younger students"
+  },
+  "answer_depth": {
+    "default": "Intermediate",
+    "options": [
+      "Basic", "Intermediate", "Advanced", "Expert"
+    ]
+  },
+  "feedback_tone": {
+    "default": "Highly Encouraging",
+    "options": [
+      "Highly Encouraging", "Balanced", "Direct", "Critical"
+    ]
+  },
+  "explanation_level": {
+    "default": "Moderate",
+    "options": [
+      "Simple", "Moderate","Grade-appropriate","Exam-Oriented"
+    ]
+  },
+  "key_topics": {
+    "Mathematics": [
+      "Numbers",
+      "Addition & Subtraction",
+      "Multiplication & Division",
+      "Fractions",
+      "Shapes",
+      "Patterns"
+    ],
+    "Science": [
+      "Plants",
+      "Animals",
+      "Human Body",
+      "Water",
+      "Air",
+      "Simple Machines"
+    ],
+    "English": [
+      "Reading Comprehension",
+      "Grammar",
+      "Vocabulary",
+      "Writing",
+      "Spelling"
+    ]
+  }
+}

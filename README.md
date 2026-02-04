@@ -74,7 +74,7 @@ streamlit run app.py
 
 4. **Access the application**
    - The app will automatically open in your browser
-   - Default URL: http://localhost:8501
+   - Default URL: [Judex](https://judex-ai.streamlit.app/)
 
 ## 📖 Usage Guide
 

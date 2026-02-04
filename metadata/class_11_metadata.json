@@ -1,0 +1,98 @@
+{
+  "class": "11",
+  "default_subject": "Mathematics",
+  "available_subjects": [
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "English",
+    "Computer Science",
+    "Economics",
+    "Business Studies",
+    "Accountancy"
+  ],
+  "boards": [
+    "CBSE",
+    "ICSE",
+    "State Board"
+  ],
+  "default_board": "CBSE",
+  "exam_types": [
+    "Unit Test",
+    "Mid Term",
+    "Final",
+    "Mock Test"
+  ],
+  "default_exam_type": "Unit Test",
+  "checking_strictness": {
+    "options": [
+      "Lenient", "Moderate", "Strict", "Very Strict"
+    ],
+    "default": "Moderate",
+    "description": "Lower strictness for younger students"
+  },
+  "answer_depth": {
+    "default": "Advanced",
+    "options": [
+      "Basic", "Intermediate", "Advanced", "Expert"
+    ]
+  },
+  "feedback_tone": {
+    "default": "Direct",
+    "options": [
+      "Highly Encouraging", "Balanced", "Direct", "Critical"
+    ]
+  },
+  "explanation_level": {
+    "default": "Exam-Oriented",
+    "options": [
+      "Simple", "Moderate","Grade-appropriate","Exam-Oriented"
+    ]
+  },
+  "key_topics": {
+    "Mathematics": [
+      "Sets",
+      "Relations & Functions",
+      "Trigonometric Functions",
+      "Complex Numbers",
+      "Linear Inequalities",
+      "Permutations & Combinations",
+      "Binomial Theorem",
+      "Sequences & Series",
+      "Straight Lines",
+      "Conic Sections",
+      "3D Geometry",
+      "Limits & Derivatives",
+      "Statistics",
+      "Probability"
+    ],
+    "Physics": [
+      "Units & Measurements",
+      "Motion",
+      "Laws of Motion",
+      "Work & Energy",
+      "Rotational Motion",
+      "Gravitation",
+      "Mechanical Properties",
+      "Thermodynamics",
+      "Kinetic Theory",
+      "Oscillations",
+      "Waves"
+    ],
+    "Chemistry": [
+      "Basic Concepts",
+      "Atomic Structure",
+      "Chemical Bonding",
+      "States of Matter",
+      "Thermodynamics",
+      "Equilibrium",
+      "Redox Reactions",
+      "Hydrogen",
+      "s-Block Elements",
+      "p-Block Elements",
+      "Organic Chemistry Basics",
+      "Hydrocarbons"
+    ]
+  }
+}

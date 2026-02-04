@@ -1,0 +1,104 @@
+{
+  "class": "12",
+  "default_subject": "Mathematics",
+  "available_subjects": [
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "English",
+    "Computer Science",
+    "Economics",
+    "Business Studies",
+    "Accountancy"
+  ],
+  "boards": [
+    "CBSE",
+    "ICSE",
+    "State Board"
+  ],
+  "default_board": "CBSE",
+  "exam_types": [
+    "Unit Test",
+    "Mid Term",
+    "Pre-Board",
+    "Board Exam",
+    "Mock Test"
+  ],
+  "default_exam_type": "Pre-Board",
+  "checking_strictness": {
+    "options": [
+      "Lenient", "Moderate", "Strict", "Very Strict"
+    ],
+    "default": "Moderate",
+    "description": "Lower strictness for younger students"
+  },
+  "answer_depth": {
+    "default": "Advanced",
+    "options": [
+      "Basic", "Intermediate", "Advanced", "Expert"
+    ]
+  },
+  "feedback_tone": {
+    "default": "Direct",
+    "options": [
+      "Highly Encouraging", "Balanced", "Direct", "Critical"
+    ]
+  },
+  "explanation_level": {
+    "default": "Exam-Oriented",
+    "options": [
+      "Simple", "Moderate","Grade-appropriate","Exam-Oriented"
+    ]
+  },
+  "key_topics": {
+    "Mathematics": [
+      "Relations & Functions",
+      "Inverse Trigonometric Functions",
+      "Matrices",
+      "Determinants",
+      "Continuity & Differentiability",
+      "Applications of Derivatives",
+      "Integrals",
+      "Applications of Integrals",
+      "Differential Equations",
+      "Vector Algebra",
+      "3D Geometry",
+      "Linear Programming",
+      "Probability"
+    ],
+    "Physics": [
+      "Electric Charges & Fields",
+      "Electrostatic Potential",
+      "Current Electricity",
+      "Moving Charges & Magnetism",
+      "Magnetism & Matter",
+      "Electromagnetic Induction",
+      "Alternating Current",
+      "Electromagnetic Waves",
+      "Ray Optics",
+      "Wave Optics",
+      "Dual Nature",
+      "Atoms",
+      "Nuclei",
+      "Semiconductor Electronics"
+    ],
+    "Chemistry": [
+      "Solid State",
+      "Solutions",
+      "Electrochemistry",
+      "Chemical Kinetics",
+      "Surface Chemistry",
+      "p-Block Elements",
+      "d & f Block Elements",
+      "Coordination Compounds",
+      "Haloalkanes",
+      "Alcohols & Ethers",
+      "Aldehydes & Ketones",
+      "Carboxylic Acids",
+      "Amines",
+      "Biomolecules",
+      "Polymers"
+    ]
+  }
+}
